@@ -1,13 +1,34 @@
-import { Injectable } from '@nestjs/common';
-// import { PrismaService } from 'src/database/prisma.service';
-import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { HashingService } from 'src/common/hashing/hashing.service';
+import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly prisma: PrismaService,
+    private readonly hashingService: HashingService,
   ) {}
+
+  async create(dto: CreateUserDto) {
+    const exists = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (exists) {
+      throw new ConflictException('E-mail já existe');
+    }
+
+    const hashedPassword = await this.hashingService.hash(dto.password);
+
+    const created = await this.prisma.user.create({
+      data: {
+        name: dto.name,
+        email: dto.email,
+        password: hashedPassword,
+      },
+    });
+
+    return created;
+  }
 }
