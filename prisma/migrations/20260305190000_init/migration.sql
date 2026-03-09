@@ -3,7 +3,8 @@ CREATE TABLE "user" (
   "id" TEXT PRIMARY KEY,
   "name" TEXT NOT NULL,
   "email" TEXT NOT NULL,
-  "password" TEXT NOT NULL
+  "password" TEXT NOT NULL,
+  "forceLogout" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- Unique index for email
