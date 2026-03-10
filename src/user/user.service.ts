@@ -9,6 +9,7 @@ import { HashingService } from 'src/common/hashing/hashing.service';
 import { PrismaService } from 'src/database/prisma.service';
 import { User } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -82,6 +83,44 @@ export class UserService {
     }
 
     return this.save(user);
+  }
+
+  async updatePassword(id: string, dto: UpdatePasswordDto) {
+    const user = await this.findOneByOrFail({ id });
+
+    const isCurrentPasswordValid = await this.hashingService.compare(
+      dto.currentPassword,
+      user.password,
+    );
+
+    if (!isCurrentPasswordValid) {
+      throw new BadRequestException('Senha atual inválida');
+    }
+
+    // Valida se a nova senha é igual à senha atual para evitar que o usuário atualize para a mesma senha
+    const isSamePassword = await this.hashingService.compare(
+      dto.newPassword,
+      user.password,
+    );
+
+    if (isSamePassword) {
+      throw new BadRequestException(
+        'A nova senha não pode ser igual à senha atual',
+      );
+    }
+
+    user.password = await this.hashingService.hash(dto.newPassword);
+    user.forceLogout = true;
+
+    return this.save(user);
+  }
+
+  async remove(id: string) {
+    const user = await this.findOneByOrFail({ id });
+    await this.prisma.user.delete({
+      where: { id },
+    });
+    return user;
   }
 
   save(user: User) {

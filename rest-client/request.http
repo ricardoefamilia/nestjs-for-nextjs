@@ -7,7 +7,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@email.com",
+  "email": "ricardo@email.com",
   "password": "123456"
 }
 
@@ -22,8 +22,8 @@ POST {{baseUrl}}/user
 Content-Type: application/json
 
 {
-  "name": "Amanda Figueira",
-  "email": "amanda@email.com",
+  "name": "Ricardo Amaral",
+  "email": "ricardo@email.com",
   "password": "123456"
 }
 
@@ -36,3 +36,24 @@ Authorization: Bearer {{jwtToken}}
 {
   "email": "ricardo@email.com"
 }
+
+### Update user password
+# @name updateUserPassword
+PATCH {{baseUrl}}/user/me/password
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "currentPassword": "123456",
+  "newPassword": "123456"
+}
+
+### Read one user
+# @name readOneUser
+GET {{baseUrl}}/user/me
+Authorization: Bearer {{jwtToken}}
+
+### Delete one user
+# @name deleteOneUser
+DELETE {{baseUrl}}/user/me
+Authorization: Bearer {{jwtToken}}
