@@ -88,6 +88,10 @@ Authorization: Bearer {{jwtToken}}
 # @name readAllPostPublic
 GET {{baseUrl}}/post/
 
+### Read all post public (Pagination)
+# @name readAllPostPublic
+GET {{baseUrl}}/post?page=1&limit=10
+
 ### Read one post public
 # @name readOnePostPublic
 GET {{baseUrl}}/post/{{postSlug}}
