@@ -1,6 +1,0 @@
--- AlterTable
-ALTER TABLE "user" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
-
--- RenameIndex
-ALTER INDEX "users_email_key" RENAME TO "user_email_key";
