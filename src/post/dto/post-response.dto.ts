@@ -10,7 +10,7 @@ export class PostResponseDto {
   readonly slug: string;
   readonly content: string;
   readonly excerpt: string;
-  readonly coverImageUrl: string;
+  readonly coverImageUrl: string | null;
   readonly published: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;

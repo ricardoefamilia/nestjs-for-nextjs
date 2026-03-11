@@ -10,7 +10,7 @@ export class PostService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreatePostDto, author: User) {
+  async create(dto: CreatePostDto, authorId: User['id']) {
     try {
       const created = await this.prisma.post.create({
         data: {
@@ -23,7 +23,7 @@ export class PostService {
 
           author: {
             connect: {
-              id: author.id,
+              id: authorId,
             },
           },
         },
