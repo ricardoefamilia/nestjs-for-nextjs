@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from 'src/database/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { createSlugFromText } from 'src/common/utils/create-slug-from-text';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
-  }
+  private readonly logger = new Logger(PostService.name);
 
-  findAll() {
-    return `This action returns all post`;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
-  }
+  async create(dto: CreatePostDto, author: User) {
+    try {
+      const created = await this.prisma.post.create({
+        data: {
+          slug: createSlugFromText(dto.title),
+          title: dto.title,
+          content: dto.content,
+          excerpt: dto.excerpt,
+          coverImageUrl: dto.coverImageUrl ?? null,
+          published: false,
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
+          author: {
+            connect: {
+              id: author.id,
+            },
+          },
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+      return created;
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error('Erro ao criar post', err.stack);
+      }
+
+      throw new BadRequestException('Erro ao criar o post');
+    }
   }
 }
