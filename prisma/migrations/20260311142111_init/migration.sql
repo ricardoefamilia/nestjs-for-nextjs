@@ -18,7 +18,7 @@ CREATE TABLE "posts" (
     "title" TEXT NOT NULL,
     "excerpt" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "cover_image_url" TEXT NOT NULL,
+    "cover_image_url" TEXT,
     "published" BOOLEAN NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -32,6 +32,8 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "posts_slug_unique" ON "posts"("slug");
+CREATE INDEX "posts_author_idx" ON "posts"("author_id");
+CREATE INDEX "posts_created_at_idx" ON "posts"("created_at" DESC);
 
 -- AddForeignKey
 ALTER TABLE "posts" ADD CONSTRAINT "posts_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
