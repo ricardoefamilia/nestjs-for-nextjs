@@ -19,12 +19,11 @@ GET / POST / PATCH / PUT / DELETE / HEAD / OPTIONS / CONNECT / TRACE
 /users/me/password   PATCH       Atualizar senha         JWT
 
 /posts/              GET         Ver todos os posts      Aberta
-/posts/[slug]        GET         Ver um post             Aberta
-/posts/me            POST        Criar post              JWT
-/posts/me            GET         Posts de um usuário     JWT
-/posts/me/[id]       GET         Post de um usuário      JWT
-/posts/me/[id]       PATCH       Atualizar um post       JWT
-/posts/me/[id]       DELETE      Apagar um post          JWT
+/posts/:slug         GET         Ver um post             Aberta
+/post/me             POST        Criar post              JWT
+/post/me/:uuid       GET         Post de um usuário      JWT
+/post/me/:uuid       PATCH       Atualizar um post       JWT
+/post/me/:uuid       DELETE      Apagar um post          JWT
 
 /upload              POST        Enviar imagem           JWT
 /uploads/img.jpg     GET/NGINX   Ver imagem              Aberta
